@@ -1,0 +1,2 @@
+export async function api(action:string,data:any={}){const r=await fetch('/api/portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...data})});const v:any=await r.json();if(!r.ok)throw new Error(v.error||'No se pudo guardar');return v;}
+export async function read(mode=''){const r=await fetch('/api/portal'+(mode?'?mode='+mode:''));const v:any=await r.json();if(!r.ok)throw new Error(v.error||'No se pudo cargar');return v;}
