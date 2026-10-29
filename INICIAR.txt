@@ -1,0 +1,97 @@
+﻿PASOS PARA INICIAR EL PROTOTIPO LOCAL DE CASABLANCA
+Windows - PowerShell
+
+1. REQUISITOS
+Node.js 22.13 o superior, con npm. Comprueba:
+
+node --version
+npm.cmd --version
+
+Si no se reconocen, instala Node.js desde https://nodejs.org/ y abre otra terminal.
+Necesitas internet para la primera instalación de dependencias y para el mapa.
+La base, los formularios y los contenidos se guardan en este computador.
+
+2. EXTRAER EL ZIP
+Extrae Casablanca_Prototipo_Local.zip. Abre PowerShell en la carpeta casablanca
+que contiene package.json. Ejemplo (reemplaza la ruta):
+
+cd "C:\ruta\donde\extrajiste\casablanca"
+
+3. PRIMER INICIO
+Ejecuta cada comando y espera a que termine:
+
+npm.cmd ci
+npm.cmd run dev
+
+No debes compilar ni aplicar migraciones manualmente para este modo.
+Se crea automáticamente datos/casablanca.sqlite y sus tablas.
+Al abrir el portal, se incorporan los contenidos de demostración.
+No necesitas Cloudflare, ChatGPT ni claves API para ejecutar esta versión.
+
+4. ABRIR EL PORTAL
+Mantén abierta la terminal y entra en:
+
+http://127.0.0.1:5173/
+
+Administración:
+http://127.0.0.1:5173/#admin
+
+Pulsa "Ingresar a la administración local". Es una sesión de demostración
+en este computador. Al reiniciar el servidor, vuelve a ingresar al panel.
+
+5. DETENER Y VOLVER A INICIAR
+Para detener: Ctrl+C en la terminal.
+Para iniciar después, desde la misma carpeta:
+
+npm.cmd run dev
+
+No hace falta volver a instalar dependencias o crear la base.
+
+6. DÓNDE ESTÁN LOS DATOS
+El archivo es casablanca\datos\casablanca.sqlite.
+Los registros permanecen al cerrar el navegador o reiniciar la aplicación.
+Cada computador tiene su propia base. No hay sincronización con internet.
+El ZIP no incluye registros personales ni respuestas: una extracción nueva
+comienza con los contenidos de demostración.
+
+Para respaldar o trasladar tus datos: detén el servidor con Ctrl+C y copia
+la carpeta datos completa al respaldo o a la otra copia del proyecto.
+Conserva cualquier archivo .sqlite-wal o .sqlite-shm que haya en esa carpeta.
+No borres datos si quieres mantener tus registros.
+
+Si usas esta edición en la misma carpeta de una versión antigua, importa una
+única base local compatible de .wrangler/state, conservando el archivo original.
+Los registros del sitio de internet no se descargan ni sincronizan.
+
+7. MODO COMPILADO (OPCIONAL)
+Detén el modo dev y usa:
+
+npm.cmd run build
+npm.cmd start
+
+La dirección y la base son las mismas. Compila antes de npm.cmd start y
+repite la compilación cuando cambies el código.
+
+8. PROBLEMAS FRECUENTES
+- "node no se reconoce": instala Node.js y abre otra terminal.
+- "Cannot find package": ejecuta npm.cmd ci dentro de casablanca.
+- Puerto 5173 ocupado: detén la otra copia con Ctrl+C.
+- Error al escribir SQLite: usa una carpeta con permiso de escritura.
+- ExperimentalWarning sobre SQLite en algunas versiones de Node es un aviso
+  del runtime, no significa que la base haya fallado.
+- Conserva el mensaje completo de cualquier error para diagnosticarlo.
+
+9. LÍMITES
+El mapa OpenStreetMap y los audios o fotografías HTTPS personalizados requieren
+internet. Las fotos iniciales están incluidas en el proyecto.
+Los QR con 127.0.0.1 solo funcionan en este computador: usa "Abrir enlace".
+Escanearlos desde otro teléfono no abre el servidor de este computador.
+Ruta, horarios, prestadores y relatos iniciales son demostrativos.
+
+10. PRUEBA RÁPIDA
+Busca una experiencia y marca una parada visitada.
+Responde una encuesta ficticia y compruébala en Administración.
+Edita un horario, guarda, reinicia el servidor y confirma que permanece.
+
+Esta edición no publica ni envía su base de datos a internet.
+El sitio publicado anteriormente es independiente; su retirada sigue pendiente.
