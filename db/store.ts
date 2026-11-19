@@ -1,5 +1,5 @@
 import { sqliteConnection } from './local-database.mjs';
-import { seed } from '../app/data';
+import { seed, valley } from '../app/data';
 import type { SQLInputValue } from 'node:sqlite';
 class LocalStatement {
   constructor(readonly sql: string, readonly values: SQLInputValue[] = []) {}
@@ -33,10 +33,43 @@ function upgradeToOfficialRoute() {
   }
   local.batch(statements);
 }
+// Fotografías aportadas en octubre de 2026: cada contenido inicial recibe una foto distinta. Solo se
+// reemplazan fotos que siguen siendo las genéricas anteriores; las editadas en Administración se respetan.
+const previousSeedPhotos = new Set([valley, '/images/museo-casablanca.jpg', '/images/museo-exhibicion.jpg', '/images/vina-gallo.jpg', '/images/vina-terraza.jpg']);
+function upgradePhotos() {
+  const connection = sqliteConnection();
+  if (connection.prepare("SELECT value FROM local_settings WHERE key='photos_distinct_2026_11b'").get()) return;
+  const statements = [local.prepare('INSERT OR IGNORE INTO local_settings(key,value) VALUES(?,?)').bind('photos_distinct_2026_11b', new Date().toISOString())];
+  for (const item of seed) {
+    const row = local.prepare('SELECT data FROM content WHERE id=?').bind(item.id).first<{data: string}>();
+    if (!row) continue;
+    const stored = JSON.parse(row.data);
+    if (stored.image !== item.image && previousSeedPhotos.has(stored.image)) statements.push(local.prepare('UPDATE content SET data=? WHERE id=?').bind(JSON.stringify({...stored, image: item.image}), item.id));
+  }
+  local.batch(statements);
+}
+// El evento de ejemplo original no tenía fecha. Si nadie lo editó, recibe una sola vez la fecha y el lugar
+// de ejemplo para que aparezca en el calendario; los eventos editados en Administración se respetan.
+function upgradeDemoEvents() {
+  const connection = sqliteConnection();
+  if (connection.prepare("SELECT value FROM local_settings WHERE key='demo_events_2026_11'").get()) return;
+  const statements = [local.prepare('INSERT OR IGNORE INTO local_settings(key,value) VALUES(?,?)').bind('demo_events_2026_11', new Date().toISOString())];
+  for (const item of seed.filter(entry => entry.type === 'event')) {
+    const row = local.prepare('SELECT data FROM content WHERE id=?').bind(item.id).first<{data: string}>();
+    if (!row) continue;
+    const stored = JSON.parse(row.data);
+    if (!stored.date && stored.name === item.name) statements.push(local.prepare('UPDATE content SET data=? WHERE id=?').bind(JSON.stringify({...stored, date: item.date, endDate: item.endDate, hours: item.hours, address: item.address, lat: item.lat, lng: item.lng}), item.id));
+  }
+  local.batch(statements);
+}
 export function database() {
   sqliteConnection();
-  local.batch(seed.map(item => local.prepare('INSERT OR IGNORE INTO content(id,type,data) VALUES(?,?,?)').bind(item.id,item.type,JSON.stringify(item))));
+  // Los eventos eliminados en Administración quedan registrados para que el contenido inicial no los recree.
+  const removed = new Set(local.prepare("SELECT key FROM local_settings WHERE key LIKE 'deleted:%'").all().results.map(row => String(row.key).slice('deleted:'.length)));
+  local.batch(seed.filter(item => !removed.has(item.id)).map(item => local.prepare('INSERT OR IGNORE INTO content(id,type,data) VALUES(?,?,?)').bind(item.id,item.type,JSON.stringify(item))));
   upgradeToOfficialRoute();
+  upgradePhotos();
+  upgradeDemoEvents();
   return local;
 }
 export async function ensureSeed() { return database(); }

@@ -50,3 +50,9 @@ next-env.d.ts
 *.sqlite
 *.sqlite-wal
 *.sqlite-shm
+
+# Configuración local de herramientas
+/.claude/
+
+# Documentos Word del informe (contienen datos personales del equipo)
+/informe/*.docx

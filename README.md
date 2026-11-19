@@ -47,11 +47,12 @@ Compilación y TypeScript satisfactorios. 22 comprobaciones de interfaz y 53 de 
 
 ## Créditos
 
-Valle: Alvaro M. Tello, Wikimedia Commons, CC BY-SA 4.0.
-https://commons.wikimedia.org/wiki/File:Vista_general_de_Valle_de_Casablanca.jpg
+Fotografías del valle, de viñas y del Museo de Casablanca (public/images/valle.jpg, vina-*.jpg, museo-*.jpg): material aportado al proyecto en octubre de 2026. Autoría y autorización de uso por confirmar antes de publicar.
+
+Mapa «Ruta del Vino Casablanca» (public/images/mapa-ruta-del-vino.jpg): material aportado al proyecto; los logotipos pertenecen a cada viña.
 
 Quintay: gaspar abrilot / Casper Abrilot, Wikimedia Commons, CC BY-SA 2.0.
 https://commons.wikimedia.org/wiki/File:Ballenera_Quintay_-_Flickr_-_Casper_Abrilot.jpg
 
-Imágenes redimensionadas y recortadas visualmente bajo sus licencias originales.
+Imagen de Quintay redimensionada y recortada visualmente bajo su licencia original.
 Mapas: OpenStreetMap y colaboradores.
